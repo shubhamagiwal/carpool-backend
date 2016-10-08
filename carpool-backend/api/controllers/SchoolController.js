@@ -15,7 +15,7 @@ module.exports = {
 					var data=response;
 					return res.ok({data:data});
 				}else{
-					return res.notFound({
+					return res.badRequest({
 							exception: "No Schools found in detroit region"
 					});
 				}
