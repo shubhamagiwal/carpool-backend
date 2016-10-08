@@ -38,7 +38,8 @@ module.exports.routes = {
 
     'get /schools': 'SchoolController.find',
     'post /login': 'UserController.login',
-    'post /signup': 'UserController.signup'
+    'post /signup': 'UserController.signup',
+    'get /allcarpools?': 'UserLocationController.get'
 
     /***************************************************************************
      *                                                                          *
