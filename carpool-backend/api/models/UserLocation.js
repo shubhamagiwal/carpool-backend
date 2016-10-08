@@ -21,10 +21,6 @@ module.exports = {
       type: Sequelize.DECIMAL(11, 8),
       require: true
     },
-    isComplete:{
-      type:Sequelize.BOOLEAN,
-      defaultValue:false,
-    },
     createdAt: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.NOW
