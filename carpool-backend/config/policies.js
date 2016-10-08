@@ -54,4 +54,8 @@ module.exports.policies = {
         'get': ['authBearer']
     },
 
+    UserCarpoolController: {
+        'put': ['authBearer']
+    }
+
 };
