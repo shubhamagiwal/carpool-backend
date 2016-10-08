@@ -6,6 +6,60 @@
  */
 
 module.exports = {
-	
-};
+    put: function(req, res) {
+        var riderId = req.body.riderId;
+        var rideeId = req.body.rideeId;
+        var point = req.body.point;
+        var self = {};
 
+        function createRideDetails(callback) {
+            return sequelize.transaction(function(t) {
+                return RideDetail.create({
+                    riderId: riderId,
+                    rideeId: rideeId,
+                    isComplete: false
+                }, { transaction: t }).then(function(riderDetails) {
+                    self.riderDetails = riderDetails;
+                    return UserPoint.create({
+                        point: point,
+                        userId: riderId
+                    }, { transaction: t }).then(function(riderUpdateDetails) {
+                        self.riderUpdateDetails = riderUpdateDetails;
+                        UserPoint.create({
+                            userId: rideeId,
+                            point: -10
+                        }).then(function(rideeUpdateDetails) {
+                            self.rideeUpdateDetails = rideeUpdateDetails;
+                        });
+                    });
+                });
+            }).then(function(result) {
+                // Transaction has been committed
+                // result is whatever the result of the promise chain returned to the transaction callback
+                return callback(null);
+            }).catch(function(err) {
+                // Transaction has been rolled back
+                // err is whatever rejected the promise chain returned to the transaction callback
+                return callback("Could Not create the ride for the user");
+            });
+        }
+
+        function responseCreation(callback) {
+            var response = {};
+            response.riderDetails = self.riderDetails;
+            response.riderUpdateDetails = self.riderUpdateDetails;
+            response.rideeUpdateDetails = self.rideeUpdateDetails;
+            return res.ok(response);
+        }
+
+        async.waterfall([
+            createRideDetails,
+            responseCreation
+        ], function(err) {
+            if (err) {
+                return res.badRequest({ exception: err });
+            }
+        });
+    }
+
+};

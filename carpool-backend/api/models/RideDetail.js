@@ -1,5 +1,5 @@
 /**
- * UserCarpool.js
+ * RideDetail.js
  *
  * @description :: TODO: You might write a short summary of how this model works and what it represents here.
  * @docs        :: http://sailsjs.org/#!documentation/models
@@ -21,26 +21,22 @@ module.exports = {
             type: Sequelize.DATE,
             defaultValue: Sequelize.NOW
         },
-        startTime: {
-            type: Sequelize.DATE,
-            defaultValue: Sequelize.NOW
-        },
-        endTime: {
-            type: Sequelize.DATE,
-            defaultValue: Sequelize.NOW
-        },
-        distance: {
-            type: Sequelize.INTEGER,
-        },
         isComplete: {
             type: Sequelize.BOOLEAN,
             defaultValue: false,
         },
     },
     associations: function() {
-        UserCarpool.belongsTo(User, {
+        RideDetail.belongsTo(User, {
             foreignKey: {
-                name: 'userId',
+                name: 'riderId',
+                allowNull: false
+            }
+        });
+
+        RideDetail.belongsTo(User, {
+            foreignKey: {
+                name: 'rideeId',
                 allowNull: false
             }
         });
