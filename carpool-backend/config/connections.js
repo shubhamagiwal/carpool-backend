@@ -45,7 +45,8 @@ module.exports.connections = {
     host: 'localhost',
     user: 'root',
     password: '123456',
-    database: 'carpool-backend'
+    database: 'carpool-backend',
+    port:3306
   },
 
   /***************************************************************************
@@ -80,7 +81,7 @@ module.exports.connections = {
     user: 'YOUR_POSTGRES_USER',
     password: 'YOUR_POSTGRES_PASSWORD',
     database: 'YOUR_POSTGRES_DB'
-  }
+  },
 
 
   /***************************************************************************
