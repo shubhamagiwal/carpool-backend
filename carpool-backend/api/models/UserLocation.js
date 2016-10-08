@@ -21,6 +21,10 @@ module.exports = {
       type: Sequelize.DECIMAL(11, 8),
       require: true
     },
+    isComplete:{
+      type:Sequelize.BOOLEAN,
+      defaultValue:false,
+    },
     createdAt: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.NOW
@@ -34,6 +38,13 @@ module.exports = {
       UserLocation.belongsTo(User, {
           foreignKey: {
               name: 'userId',
+              allowNull: false
+          }
+      })
+
+      UserLocation.belongsTo(School, {
+          foreignKey: {
+              name: 'schoolId',
               allowNull: false
           }
       });

@@ -28,7 +28,8 @@ module.exports = {
           },
           stateId:{
             type: Sequelize.STRING,
-            unique:true
+            unique:true,
+            require:true
           },
           isStateIdVerified:{
             type:Sequelize.BOOLEAN,
