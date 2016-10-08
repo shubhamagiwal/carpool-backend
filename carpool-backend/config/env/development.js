@@ -21,7 +21,7 @@ module.exports = {
   //   connection: 'someMongodbServer'
   // }
   // 
-   port: process.env.PORT || 3000,
-   hookTimeout: 30000
+  // port: process.env.PORT || 3000,
+  // hookTimeout: 30000
 
 };

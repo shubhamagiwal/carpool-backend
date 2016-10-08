@@ -44,7 +44,7 @@ module.exports.connections = {
     adapter: 'sails-mysql',
     host: 'localhost',
     user: 'root',
-    password: '',
+    password: '123456',
     database: 'carpool-backend',
     port:3306
   },
