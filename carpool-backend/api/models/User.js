@@ -28,7 +28,8 @@ module.exports = {
           },
           stateId:{
             type: Sequelize.STRING,
-            unique:true
+            unique:true,
+            require:true
           },
           isStateIdVerified:{
             type:Sequelize.BOOLEAN,
@@ -44,7 +45,7 @@ module.exports = {
           }
       },
       associations: function() {
-          Users.belongsTo(AuthenticationProvider, {
+          User.belongsTo(AuthenticationProvider, {
               foreignKey: {
                   name: 'authenticationProviderId',
                   allowNull: false

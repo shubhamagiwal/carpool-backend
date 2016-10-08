@@ -26,7 +26,7 @@ module.exports = {
     },
     point:{
       type: Sequelize.INTEGER
-    }
+    },
     createdAt: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.NOW
