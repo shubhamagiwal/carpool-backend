@@ -79,14 +79,29 @@ module.exports = {
             });
         }
 
+        function getReferralPoint(callback) {
+            var query = "SELECT SUM(point) as sum from UserPoints where UserPoints.userId=" + self.userDetails.id + " group by UserPoints.userId ";
+
+            sequelize.query(query, { type: sequelize.QueryTypes.SELECT })
+                .then(function(response) {
+                    if (response.length > 0) {
+                        self.points = response[0].sum;
+                        return callback(null);
+                    } else {
+                        return callback("Could not create Referral Code");
+                    }
+                });
+        }
 
         function responseCreation(callback) {
             var response = {};
             response.userDetails = self.userDetails;
+            response.userDetails.dataValues.points = self.points;
             response.authDetails = self.authDetails;
             response.accessTokenDetails = self.accessTokenDetails;
             return res.ok(response);
         }
+
 
         async.waterfall([
             encryptPassword,
@@ -94,6 +109,7 @@ module.exports = {
             getUserDetail,
             generateAccessToken,
             createAccessToken,
+            getReferralPoint,
             responseCreation
         ], function(err) {
             if (err) {
@@ -180,10 +196,25 @@ module.exports = {
             });
         }
 
+        function createReferralPoint(callback) {
+            UserPoint.create({
+                userId: self.userDetails.id,
+                point: 100
+            }).then(function(response) {
+                if (response) {
+                    self.points = 100;
+                    return callback(null);
+                } else {
+                    return callback("Could not create Referral Code");
+                }
+            });
+        }
+
 
         function responseCreation(callback) {
             var response = {};
             response.userDetails = self.userDetails;
+            response.userDetails.dataValues.points = self.points;
             response.authDetails = self.authDetails;
             response.accessTokenDetails = self.accessTokenDetails;
             return res.ok(response);
@@ -195,6 +226,7 @@ module.exports = {
             userDetailsCreate,
             generateAccessToken,
             createAccessToken,
+            createReferralPoint,
             responseCreation
         ], function(err) {
             if (err) {
