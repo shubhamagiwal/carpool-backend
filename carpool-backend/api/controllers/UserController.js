@@ -313,7 +313,7 @@ module.exports = {
         function getAuthDetails(callback) {
             AuthenticationProvider.find({
                 where: {
-                    id: self.userDetails.id
+                    id: self.userDetails.authenticationProviderId
                 }
             }).then(function(response) {
                 if (response) {
@@ -342,7 +342,7 @@ module.exports = {
         function getAccessTokenDetail(callback) {
             AccessToken.find({
                 where: {
-                    token: req.header('token')
+                    token: req.body.token
                 }
             }).then(function(response) {
                 if (response) {
