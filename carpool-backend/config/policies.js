@@ -60,6 +60,9 @@ module.exports.policies = {
     },
     UserController: {
         'update': ['authBearer']
+    },
+    AuthenticationProviderController: {
+        'update': ['authBearer']
     }
 
 };
