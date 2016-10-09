@@ -55,7 +55,11 @@ module.exports.policies = {
     },
 
     UserCarpoolController: {
-        'put': ['authBearer']
+        'put': ['authBearer'],
+        'giveReferralPoints': ['authBearer']
+    },
+    UserController: {
+        'update': ['authBearer']
     }
 
 };

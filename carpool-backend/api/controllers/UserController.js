@@ -88,7 +88,8 @@ module.exports = {
                         self.points = response[0].sum;
                         return callback(null);
                     } else {
-                        return callback("Could not create Referral Code");
+                        err.exception = "Could not create Referral Code";
+                        return callback(err);
                     }
                 });
         }
@@ -150,8 +151,7 @@ module.exports = {
                     self.authDetails = response;
                     return callback(null);
                 } else {
-                    err.exception = "Unable to create the user.";
-                    return callback(err);
+                    return callback("Unable to create the user.");
                 }
             });
         }
@@ -168,8 +168,7 @@ module.exports = {
                     self.userDetails = response;
                     return callback(null);
                 } else {
-                    err.exception = "Unable to create the user.";
-                    return callback(err);
+                    return callback("Unable to create the user.");
                 }
             });
         }
@@ -190,8 +189,7 @@ module.exports = {
                     self.accessTokenDetails = response;
                     return callback(null);
                 } else {
-                    err.exception = "Error in creating the access Token. Try again later";
-                    return callback(err);
+                    return callback("Error in creating the access Token. Try again later");
                 }
             });
         }
@@ -230,9 +228,157 @@ module.exports = {
             responseCreation
         ], function(err) {
             if (err) {
-                return res.badRequest(err);
+                return res.badRequest({ exception: err });
             }
         });
+
+    },
+
+    update: function(req, res) {
+        var userId = req.param("userId");
+        var email = req.body.email;
+        var phone = req.body.phone;
+        var fullName = req.body.fullName;
+        var self = {};
+
+
+        function updateUserDetail(callback) {
+            if (fullName) {
+                User.update({
+                    fullName: fullName
+                }, {
+                    where: {
+                        id: userId
+                    }
+                }).then(function(response) {
+                    if (response) {
+                        return callback(null);
+                    } else {
+                        return callback("Error User details could not be updated");
+                    }
+                });
+            } else {
+                return callback(null);
+            }
+
+        }
+
+        function getUserDetail(callback) {
+            User.find({
+                where: {
+                    id: userId
+                }
+            }).then(function(response) {
+                if (response) {
+                    self.userDetails = response;
+                    return callback(null);
+                } else {
+                    return callback("Error User details could not be updated");
+                }
+            });
+        }
+
+        function updateAuthDetails(callback) {
+
+            var options = {};
+
+            if (email) {
+                options.email = email;
+            }
+
+            if (phone) {
+                options.phone = phone;
+            }
+
+            if (email || phone) {
+                AuthenticationProvider.update(options, {
+                    where: {
+                        id: self.userDetails.authenticationProviderId
+                    }
+                }).then(function(response) {
+                    if (response) {
+                        self.authDetails = response;
+                        return callback(null);
+                    } else {
+                        return callback("Error User details could not be updated");
+                    }
+                });
+            } else {
+                return callback(null);
+            }
+
+        }
+
+
+        function getAuthDetails(callback) {
+            AuthenticationProvider.find({
+                where: {
+                    id: self.userDetails.id
+                }
+            }).then(function(response) {
+                if (response) {
+                    self.authDetails = response;
+                    return callback(null);
+                } else {
+                    return callback("Error User details could not be updated");
+                }
+            });
+        }
+
+        function getReferralPoint(callback) {
+            var query = "SELECT SUM(point) as sum from UserPoints where UserPoints.userId=" + self.userDetails.id + " group by UserPoints.userId ";
+
+            sequelize.query(query, { type: sequelize.QueryTypes.SELECT })
+                .then(function(response) {
+                    if (response.length > 0) {
+                        self.points = response[0].sum;
+                        return callback(null);
+                    } else {
+                        return callback("Error User details could not be updated");
+                    }
+                });
+        }
+
+        function getAccessTokenDetail(callback) {
+            AccessToken.find({
+                where: {
+                    token: req.header('token')
+                }
+            }).then(function(response) {
+                if (response) {
+                    self.accessTokenDetails = response;
+                    return callback(null);
+                } else {
+                    return callback("Error User details could not be updated");
+                }
+            })
+        }
+
+        function responseCreation(callback) {
+            var response = {};
+            response.userDetails = self.userDetails;
+            response.userDetails.dataValues.points = self.points;
+            response.authDetails = self.authDetails;
+            response.accessTokenDetails = self.accessTokenDetails;
+            return res.ok(response);
+        }
+
+        async.waterfall([
+            updateUserDetail,
+            getUserDetail,
+            updateAuthDetails,
+            getAuthDetails,
+            getReferralPoint,
+            getAccessTokenDetail,
+            responseCreation
+        ], function(err) {
+            if (err) {
+                return res.badRequest({ exception: err });
+            }
+        });
+
+
+
 
     }
 
