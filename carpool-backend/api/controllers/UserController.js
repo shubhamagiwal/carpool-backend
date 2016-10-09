@@ -235,7 +235,7 @@ module.exports = {
     },
 
     update: function(req, res) {
-        var userId = req.param("userId");
+        var userId = req.body.userId;
         var email = req.body.email;
         var phone = req.body.phone;
         var fullName = req.body.fullName;
