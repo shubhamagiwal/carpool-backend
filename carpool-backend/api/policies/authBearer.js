@@ -1,5 +1,5 @@
 module.exports = function(req, res, next) {
-    var token = req.headers['token'];
+    var token = req.body.token;
 
     var options = {
         where: {
