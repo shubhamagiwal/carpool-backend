@@ -5,6 +5,8 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
+var async=require("async");
+
 module.exports = {
     put: function(req, res) {
         var riderId = req.body.riderId;
@@ -55,6 +57,31 @@ module.exports = {
         async.waterfall([
             createRideDetails,
             responseCreation
+        ], function(err) {
+            if (err) {
+                return res.badRequest({ exception: err });
+            }
+        });
+    },
+
+    giveReferralPoints: function(req, res) {
+        var userId = req.body.userId;
+
+        function giveReferralPointsForCarpoolingIntiative(callback) {
+            UserPoint.create({
+                userId: userId,
+                point: 100
+            }).then(function(response) {
+                if (response) {
+                    return res.ok({ data: "You were given 100 Referral points for starting the carpooling" });
+                } else {
+                    return callback("Could not provide you referral points.");
+                }
+            });
+        }
+
+        async.waterfall([
+            giveReferralPointsForCarpoolingIntiative
         ], function(err) {
             if (err) {
                 return res.badRequest({ exception: err });

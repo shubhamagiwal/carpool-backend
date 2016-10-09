@@ -40,7 +40,8 @@ module.exports.routes = {
     'post /login': 'UserController.login',
     'post /signup': 'UserController.signup',
     'get /allcarpools?': 'UserLocationController.get',
-    'put /acceptride': 'UserCarpoolController.put'
+    'put /acceptride': 'UserCarpoolController.put',
+    'put /givepoints': 'UserCarpoolController.giveReferralPoints'
 
     /***************************************************************************
      *                                                                          *
