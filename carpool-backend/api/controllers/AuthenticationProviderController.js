@@ -12,7 +12,7 @@ module.exports = {
     update: function(req, res) {
         var password;
         var self = {};
-        var userId = req.param("userId");
+        var userId = req.body.userId;
         if (req.body.password) {
             password = md5(req.body.password);
         } else {
